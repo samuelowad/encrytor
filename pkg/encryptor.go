@@ -9,42 +9,34 @@ import (
 	"os"
 )
 
-func Encrypt(file string) {
-	fileText, err := os.ReadFile(file)
+func Encrypt(path string, key []byte) {
+	infile, err := os.ReadFile(path)
 	if err != nil {
-		//return err
 		log.Fatal(err)
 	}
 
-	// The key should be 16 bytes (AES-128), 24 bytes (AES-192) or
-	// 32 bytes (AES-256)
-	key, err := os.ReadFile("./shared/key/key.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		log.Panic(err)
 	}
 
+	// Creating GCM mode
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		log.Panic(err)
+		log.Fatalf("cipher GCM err: %v", err.Error())
 	}
 
 	nonce := make([]byte, gcm.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		log.Fatal(err)
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		log.Fatalf("nonce err: %v", err.Error())
 	}
 
-	ciphertext := gcm.Seal(nonce, nonce, fileText, nil)
-	// Save back to file
-	err = os.WriteFile(file+".bin", ciphertext, 0777)
+	ciphertext := gcm.Seal(nonce, nonce, infile, nil)
+
+	// Writing encryption content
+	err = os.WriteFile(path+ENCRYPTED_FILE_EXTENSION, ciphertext, 0777)
 	if err != nil {
-		//return err
-		log.Panic(err)
+		log.Fatalf("write file err: %v", err.Error())
 	}
-	os.Remove(file)
-
-	//return nil
+	os.Remove(path)
 }

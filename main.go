@@ -1,22 +1,10 @@
+/*
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+*/
 package main
 
-import (
-	"github.com/samuelowad/encryptor/gui"
-)
+import "github.com/samuelowad/encryptor/cmd"
 
 func main() {
-	//	fileData, err := util.ScanFiles("./testData")
-	//	if err != nil {
-	//		fmt.Printf("", err)
-	//		return
-	//	}
-	//
-	//	for _, file := range fileData {
-	//
-	//		pkg.Encrypt(file.Path)
-	//
-	//	}
-	//
-	//	fmt.Printf("fileData = %v\n", fileData)
-	gui.Gui()
+	cmd.Execute()
 }
