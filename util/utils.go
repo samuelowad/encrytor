@@ -17,4 +17,5 @@ func NormalizeKey(password string) []byte {
 	default:
 		return key[:32] // 256-bit key
 	}
+
 }
